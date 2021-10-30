@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+
+<!-- INICIO DE SECCIÓN PARA AGREGAR ESTILOS -->
+
+<head th:replace="plantilla/head :: header"></head>
+<!--  FIN DE SECCIÓN PARA AGREGAR ESTILOS -->
+
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+  <div class="wrapper">
+
+    <!--INICIO SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+    <nav th:insert="plantilla/navbar :: nav"></nav>
+    <!--FIN DE SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+
+
+    <!-- INICIO DE SECCIÓN PARA EL MENU -->
+    <div th:insert="plantilla/menu :: menu"></div>
+    <!--  FIN DE SECCIÓN PARA EL MENU -->
+
+
+    <!--INICIO DE CONTENIDO-->
+    <div class="content-wrapper">
+
+
+      <!-- INICIO DE ENCABEZADO DE CONTENIDO-->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">Roles</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a th:href="@{'/home'}">Home</a></li>
+                <li class="breadcrumb-item active">Roles</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN DE ENCABEZADO DE CONTENIDO -->
+
+
+      <!-- SECCIÓN DE CONTENIDO -->
+      <section class="content">
+         <div class="container-fluid">
+	 		 <div class="row">
+			 	<div class = "col-md-12">
+			 	<div class="container-fluid">
+			
+			 		<!-- Tabla de roles registrados -->
+					<div class="card">
+					
+						<div class = "card-header">
+							<div class = "row justify-content-start">
+								<div class="col-sm-12">
+									<a sec:authorize="hasAuthority('WRITE_ROLE')"  class="btn btn-sm btn-primary float-right" th:href = "@{'/roles/registro'}"><i class="fas fa-plus"></i> Nuevo rol</a>
+								</div>
+							</div>
+						</div>
+						
+						<div class = "card-body">
+						<!-- 
+							<div th:if="${result}">
+								<div th:if="${result.result==true}" class="alert alert-success" style="font-size: 15px" role="alert"><p th:text="${result.mensaje}"></p></div>
+								<div th:if="${result.result==false}" class="alert alert-danger" style="font-size: 15px" role="alert"><p th:text="${result.mensaje}"></p></div>			
+							</div>							
+						-->
+							<div class="table-responsive-sm">
+							<div th:if="${not #lists.isEmpty(roles)}">
+								<table id="tabla" class="table table-sm table-striped table-hover td-responsive table-bordered custom-data-table">
+									<thead class="thead-dark">
+										<tr>
+											<th style="width:5rem;" >Id</th>
+											<th>Nombre</th>
+											<th>Detalle</th>
+											<th style="width:6.2rem;">Acciones</th>									
+										</tr>
+									</thead>
+									<tbody>
+										<tr data-th-each="role : ${roles}">
+											<td th:text="${role.id}">id</td>
+											<td th:text="${role.name}">rolename</td>
+											<td th:text="${role.details}">detalles</td>		
+											<td >
+												<a sec:authorize="hasAuthority('READ_ROLE')"  class="btn btn-sm btn-default waves-effect waves-light" th:href = "@{'/roles/detalle/'+${role.id}}"><i class="fa fa-eye"></i></a>&nbsp;
+												<a sec:authorize="hasAuthority('WRITE_ROLE')"  class="btn btn-sm btn-default waves-effect waves-light" th:href = "@{'/roles/edicion/'+${role.id}}"><i class="fa fa-pen"></i></a>&nbsp;
+												<a sec:authorize="hasAuthority('DELETE_ROLE')"  class="btn btn-sm btn-danger waves-effect waves-light" th:href = "@{'/roles/eliminacion/'+${role.id}}"><i class="fa fa-trash"></i></a>												
+											</td>	
+										</tr>
+									</tbody>
+								</table>
+								</div>
+							</div>					
+						</div>
+					</div>
+			 		</div>
+			 	</div>
+			 </div>        
+         </div>
+      </section>
+      <!-- FIN DE SECCIÓN DE CONTENIDO -->
+
+
+    </div>
+
+    <!-- FIN DE CONTENIDO -->
+
+
+    <!-- INICIO DE SECCIÓN PARA AGREGAR FOOTER -->
+    <div th:replace="plantilla/footer :: footer"></div>
+    <!-- FIN DE SECCIÓN PARA AGREGAR FOOTER-->
+
+  </div>
+
+
+  <!-- js -->
+		<script th:replace="plantilla/script :: scripts"></script>
+
+		<!-- data tables -->
+		<script type="text/javascript"
+			th:src="@{/plugins/datatables/jquery.dataTables.min.js}"></script>
+		<script type="text/javascript"
+			th:src="@{/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js}"></script>
+		<script type="text/javascript"
+			th:src="@{/plugins/datatables-responsive/js/dataTables.responsive.min.js}"></script>
+		<script type="text/javascript"
+			th:src="@{/plugins/datatables-responsive/js/responsive.bootstrap4.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/datatable/config.js}"></script>
+		<!-- /.data tables -->
+
+		<!-- toastr -->
+		<script type="text/javascript"
+			th:src="@{/plugins/toastr/toastr.min.js}"></script>
+		
+		<script th:if="${ result != null }" th:inline="javascript">
+			val = /*[[${result.result}]]*/null;
+			texto = /*[[${result.mensaje}]]*/null;
+			
+			if(val == true){
+				toastr.success(texto)
+			}
+			if(val == false){
+				toastr.error(texto)
+			}		
+		</script>
+		<!-- /.toastr -->
+		<!-- /.js -->
+
+	</div>
+	<!-- FIN DE layout:fragment="content" -->
+
+</body>
+
+</html>
+

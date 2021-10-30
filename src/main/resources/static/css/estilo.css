@@ -1,0 +1,33 @@
+#miniatura {
+  width: 60px;
+  height: 60px;
+}
+
+#pregunta{
+  width: 200px;
+  height: 200px;
+  display:block;
+  margin:auto;
+}
+
+#correcta{
+  background-color: #9FD79D;
+}
+
+#incorrecta{
+  background-color: #D59A94;
+}
+
+#nombreempresa{
+  font-style: italic;
+  font-weight: bold;
+}
+
+#imagen{
+  width: 120px;
+  height: 120px;
+  display:block;
+  margin:auto;
+}
+
+

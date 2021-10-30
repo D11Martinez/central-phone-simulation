@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+
+<!-- INICIO DE SECCIÓN PARA AGREGAR ESTILOS -->
+
+<head th:replace="plantilla/head :: header"></head>
+<!--  FIN DE SECCIÓN PARA AGREGAR ESTILOS -->
+
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+  <div class="wrapper">
+
+    <!--INICIO SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+    <nav th:insert="plantilla/navbar :: nav"></nav>
+    <!--FIN DE SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+
+
+    <!-- INICIO DE SECCIÓN PARA EL MENU -->
+    <div th:insert="plantilla/menu :: menu"></div>
+    <!--  FIN DE SECCIÓN PARA EL MENU -->
+
+
+    <!--INICIO DE CONTENIDO-->
+    <div class="content-wrapper">
+
+
+      <!-- INICIO DE ENCABEZADO DE CONTENIDO-->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">Elminaci&oacute;n de Rol</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a th:href="@{'/home'}">Home</a></li>
+                <li class="breadcrumb-item"><a th:href="@{'/roles'}">roles</a></li>
+                <li class="breadcrumb-item active">Eliminaci&oacute;n</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN DE ENCABEZADO DE CONTENIDO -->
+
+
+      <!-- SECCIÓN DE CONTENIDO -->
+      <section class="content">
+         <div class="container-fluid">
+	 		 <div class="row">
+			 	<div class = "col-md-12">
+			 	<div class="container-fluid">
+			 		<!-- Registro de roles  -->
+					<div class="card">
+					
+						<div class = "card-header">
+							<div class = "row justify-content-around">
+								<div class="col-md-6 col-sm-12">
+									<h4>Eliminaci&oacute;n/bloqueo de rol</h4>
+								</div>
+								<div class="col-md-6 col-sm-12">
+									<a sec:authorize="hasAuthority('READ_ROLE')"  th:href = "@{'/roles'}" class="button btn-sm btn-danger  float-right mr-1 mb-1">Cancelar</a>
+									<button type="submit" form = "roleForm" name="btnSave" class="button btn-sm btn-primary  float-right mr-1 mb-1">Guardar</button>
+								</div>
+							</div>
+						</div>
+						
+						<div class = "card-body">
+							
+							<!-- FORMULARIO DE ELIMINACION DE ROLES -->
+							<div th:if = "${roleModel}">
+								<form name ="roleForm" id = "roleForm" class="" method="POST">
+									<input type = "hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}" />
+									<div class = "row justify-content-around">
+										<div class="col-md-6 col-sm-12 p-3">
+											<h5>Seleccione la operación a ejecutar:</h5>
+												<input type="hidden" name="idItem" th:field = "${roleModel.id}">
+		                                   	<!-- <div class="form-inline" >
+		                                      	<input type="radio" name="optDel" class="form-control-sm mr-2" value = "lock">
+		                                      	<label class="float-label" th:text = "${'Deshabilitar rol: '+roleModel.name}"></label>
+		                                    </div>-->	
+		                                   
+		                                   	<div class="form-inline" >
+		                                      	<input type="radio" name="optDel" class="form-control-sm mr-2" value = "delete" required>
+		                                      	<label class="float-label" th:text = "${'Eliminar completamente el rol: '+roleModel.name}"></label>
+		                                    </div>	
+		                                   											
+										</div>								
+									</div>									
+								</form>
+							</div>	
+							
+							<div th:if="${roleModel==null}">
+								<h6>No se pudo recuperar la informaci&oacute;n solicitada.</h6>
+							</div>		
+						</div>
+					</div>
+			 		</div>
+			 	</div>
+
+
+			 </div>        
+         </div>
+      </section>
+      <!-- FIN DE SECCIÓN DE CONTENIDO -->
+
+
+    </div>
+
+    <!-- FIN DE CONTENIDO -->
+
+
+    <!-- INICIO DE SECCIÓN PARA AGREGAR FOOTER -->
+    <div th:replace="plantilla/footer :: footer"></div>
+    <!-- FIN DE SECCIÓN PARA AGREGAR FOOTER-->
+
+  </div>
+
+
+  <!-- INICIO DE SECCIÓN PARA AGREGAR SCRIPTS-->
+  <script th:replace="plantilla/script :: scripts"></script>
+  
+  <!-- FILTRO EN SELECT -->
+  <script type="text/javascript" th:src="@{/js/custom/SelectFilter.js}"></script>
+  
+        <!-- toastr -->
+		<script type="text/javascript"
+			th:src="@{/plugins/toastr/toastr.min.js}"></script>
+
+		<script th:if="${ result != null }" th:inline="javascript">
+			val = /*[[${result.result}]]*/null;
+			texto = /*[[${result.mensaje}]]*/null;
+			
+			if(val == true){
+				toastr.success(texto)
+			}
+			if(val == false){
+				toastr.error(texto)
+			}		
+		</script>
+		<!-- /.toastr -->
+		<!-- /.js -->
+  
+  <!-- FIN DE SECCIÓN PARA AGREGAR SCRIPTS -->
+  
+</body>
+</html>

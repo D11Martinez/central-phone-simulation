@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<!--INICIO DE BARRA DE NAVEGACIÓN SUPERIOR-->
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+    <!-- INICIO DE OPCIÓN DE OCULTAR MENÚ-->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+    </ul>
+    <!-- FIN DE OPCIÓN DE OCULTAR MENÚ -->
+
+    <!-- INICIO DE OPCIONES DE LA BARRA DE NAVEGACIÓN-->
+    <ul class="navbar-nav ml-auto">
+
+        <!-- INICIO DE OPCIONES DE CUENTA DE USUARIO -->
+        <li class="dropdown user user-menu">
+            <div th:if="${user}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <img th:src="@{/img/user.png}" class="user-image" alt="User Image">
+                    <span class="hidden-xs" th:text = "${user.username}">Usuario</span>
+                </a>
+                <ul class="dropdown-menu">
+
+                    <!-- User image -->
+                    <li class="user-header">
+                        <div class = "row justify-content-center m-2">
+                            <div class="col-8">
+                                <img th:src="@{/img/user.png}" class="img-circle" alt="User Image">
+                            </div>
+                        </div>
+                        <div class = "row justify-content-between mr-2 ml-2">
+                            <div class="col-8">
+                                <span th:text = "${user.username}" class = ""></span>
+                            </div>
+                            <div class = "col-2">
+                                <small> 2021 </small>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="user-footer">
+                        <div class="row justify-content-around mr-2 ml-2">
+                            <div class="col-12">
+                                <a th:href="@{/logout}" class="button btn-sm btn-primary  float-sm-right mr-1">Salir</a>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </li>
+        <!-- FIN DE OPCIONES DE CUENTA DE USUARIO-->
+
+    </ul>
+    <!-- FIN DE OPCIONES DE LA BARRA DE NAVEGACIÓN -->
+</nav>
+<!-- FIN DE LA BARRA DE NAVEGACIÓN SUPERIOR -->
+
+</html>

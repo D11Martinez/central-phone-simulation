@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- estilos y título -->
+    <head th:replace="plantilla/head :: header"></head>
+
+    <!-- data tables -->
+    <link rel="stylesheet"
+          th:href="@{/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+    <link rel="stylesheet"
+          th:href="@{/plugins/datatables-responsive/css/responsive.bootstrap4.min.css}">
+    <!-- /.data tables -->
+
+    <link rel="stylesheet" th:href="@{/plugins/toastr/toastr.min.css}">
+    <!-- /.estilos y título -->
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+
+<div class="wrapper">
+
+    <!-- navbar -->
+    <nav th:insert="plantilla/navbar :: nav"></nav>
+    <!-- /.navbar -->
+
+
+    <!-- sidebar -->
+    <div th:insert="plantilla/menu :: menu"></div>
+    <!--  /.sidebar -->
+
+
+    <!-- content -->
+    <div class="content-wrapper">
+
+        <!-- content header -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Registro de llamadas</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#" th:href="@{/home}">Home</a></li>
+                            <li class="breadcrumb-item active">Registro de llamadas</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content header -->
+
+        <!-- main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title" style="padding-top: 6px;">
+                            <i class="fas fa-list"></i>&nbsp;&nbsp; Listado
+                        </h3>
+                        <a href="#" th:href="@{/calls/agenda}"
+                           class="btn btn-sm btn-primary float-right"
+                           title="Nuevo Registro de Llamada">
+                            <i class="fas fa-plus"></i> Agenda </a>
+                    </div>
+
+                    <div class="card-body">
+                        <table id="data_table"
+                               class="table table-sm table-striped table-hover td-responsive table-bordered custom-data-table">
+                            <thead>
+                            <tr class="thead-dark">
+                                <th>Id</th>
+                                <th>Central Telefónica</th>
+                                <th>Emisor</th>
+                                <th>Receptor</th>
+                                <th>Estado</th>
+                                <th>Duración</th>
+                                <th>Creada</th>
+                                <th>Actualizada</th>
+                                <th>Opts</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="objeto : ${callLogsList}">
+                                <td th:text="${objeto.id}" style="vertical-align: middle;"></td>
+
+                                <td th:text="${objeto.senderLine?.centralTelephone?.name}" style="vertical-align: middle;"></td>
+
+                                <td th:text="${objeto.senderLine?.id}" style="vertical-align: middle;"></td>
+
+                                <td th:text="${objeto.receiverLine?.id}" style="vertical-align: middle;"></td>
+
+                                <td th:text="${objeto.state}" style="vertical-align: middle;"></td>
+
+                                <td th:text="${objeto.duration}" style="vertical-align: middle;"></td>
+
+                                <td th:text="${objeto.createdAt}" style="vertical-align: middle;"></td>
+                                <td th:text="${objeto.updatedAt}" style="vertical-align: middle;"></td>
+                                <td>
+                                    <a sec:authorize="hasAuthority('ADMIN')"
+                                       class="btn btn-sm btn-danger waves-effect waves-light"
+                                       th:href="@{'/calls/delete/'+${objeto.id}}"><i
+                                            class="fa fa-trash"></i></a>
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-footer"></div>
+
+                </div>
+            </div>
+        </section>
+        <!-- /.main content -->
+
+        <!-- footer -->
+        <div th:replace="plantilla/footer :: footer"></div>
+        <!-- /.footer -->
+    </div>
+    <!-- /.content -->
+
+    <!-- js -->
+    <script th:replace="plantilla/script :: scripts"></script>
+
+    <!-- data tables -->
+    <script type="text/javascript"
+            th:src="@{/plugins/datatables/jquery.dataTables.min.js}"></script>
+    <script type="text/javascript"
+            th:src="@{/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js}"></script>
+    <script type="text/javascript"
+            th:src="@{/plugins/datatables-responsive/js/dataTables.responsive.min.js}"></script>
+    <script type="text/javascript"
+            th:src="@{/plugins/datatables-responsive/js/responsive.bootstrap4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/datatable/config.js}"></script>
+    <!-- /.data tables -->
+
+    <!-- toastr -->
+    <script type="text/javascript"
+            th:src="@{/plugins/toastr/toastr.min.js}"></script>
+
+    <script th:if="${ result != null }" th:inline="javascript">
+			val = /*[[${result.result}]]*/null;
+			texto = /*[[${result.mensaje}]]*/null;
+			
+			if(val == true){
+				toastr.success(texto)
+			}
+			if(val == false){
+				toastr.error(texto)
+			}		
+
+    </script>
+    <!-- /.toastr -->
+    <!-- /.js -->
+
+</div>
+
+</body>
+
+</html>

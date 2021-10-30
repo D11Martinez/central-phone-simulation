@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+
+<!-- INICIO DE SECCIÓN PARA AGREGAR ESTILOS -->
+
+<head th:replace="plantilla/head :: header"></head>
+<!--  FIN DE SECCIÓN PARA AGREGAR ESTILOS -->
+
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+  <div class="wrapper">
+
+    <!--INICIO SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+    <nav th:insert="plantilla/navbar :: nav"></nav>
+    <!--FIN DE SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+
+
+    <!-- INICIO DE SECCIÓN PARA EL MENU -->
+    <div th:insert="plantilla/menu :: menu"></div>
+    <!--  FIN DE SECCIÓN PARA EL MENU -->
+
+
+    <!--INICIO DE CONTENIDO-->
+    <div class="content-wrapper">
+
+
+      <!-- INICIO DE ENCABEZADO DE CONTENIDO-->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">Usuarios</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a th:href="@{'/home'}">Home</a></li>
+                <li class="breadcrumb-item active">Usuarios</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN DE ENCABEZADO DE CONTENIDO -->
+
+
+      <!-- SECCIÓN DE CONTENIDO -->
+      <section class="content">
+         <div class="container-fluid">
+	 		 <div class="row">
+			 	<div class = "col-md-12">
+			 	 <div class="container-fluid">
+			 		<!-- Tabla de usuarios registrados -->
+					<div class="card">
+					
+						<div class = "card-header">
+							<div class = "row justify-content-start">
+								<div class="col-sm-12">
+									<a sec:authorize="hasAuthority('WRITE_USERS')"  class="btn btn-sm btn-primary float-right" th:href = "@{'/usuarios/registro'}"><i class="fas fa-plus"></i> Nuevo usuario</a>
+								</div>
+							</div>
+						</div>
+						
+						<div class = "card-body">
+						<!-- 
+							<div th:if="${result}">
+								<div th:if="${result.result==true}" class="alert alert-success" style="font-size: 15px" role="alert"><p th:text="${result.mensaje}"></p></div>
+								<div th:if="${result.result==false}" class="alert alert-danger" style="font-size: 15px" role="alert"><p th:text="${result.mensaje}"></p></div>			
+							</div>							
+						-->
+							<div class="table-responsive-sm">
+							<div th:if="${not #lists.isEmpty(users)}">
+								<table id="tabla" class="table table-sm table-striped table-hover td-responsive table-bordered custom-data-table">
+									<thead class="thead-dark">
+										<tr>
+											<th style="width:5rem;" >Id</th>
+											<th>Email</th>
+											<th>Bloqueado</th>
+											<th>Creaci&oacute;n</th>
+											<th>Último acceso</th>
+											<th style="width:6.2rem;">Acciones</th>									
+										</tr>
+									</thead>
+									<tbody>
+										<tr data-th-each="user : ${users}">
+											<td th:text="${user.id}">id</td>
+											<td th:text="${user.email}">email</td>
+											<td th:text="${user.bloqueado}">bloqueado</td>
+											<td th:text="${user.fecha_creacion}">creacion</td>
+											<td th:text="${user.ultimo_acceso}">ultimo acesso</td>		
+											<td >
+												<a sec:authorize="hasAuthority('READ_USERS')"  class="btn btn-sm btn-default waves-effect waves-light" th:href = "@{'/usuarios/detalle/'+${user.id}}"><i class="fa fa-eye"></i></a>&nbsp;
+												<a sec:authorize="hasAuthority('WRITE_USERS')"  class="btn btn-sm btn-default waves-effect waves-light" th:href = "@{'/usuarios/edicion/'+${user.id}}"><i class="fa fa-pen"></i></a>&nbsp;
+												<a sec:authorize="hasAuthority('DELETE_USERS')"  class="btn btn-sm btn-danger waves-effect waves-light" th:href = "@{'/usuarios/eliminacion/'+${user.id}}"><i class="fa fa-trash"></i></a>												
+											</td>	
+										</tr>
+									</tbody>
+								</table>
+								</div>
+							</div>					
+						</div>
+					</div>
+			 		</div>
+			 	</div>
+			 </div>        
+         </div>
+      </section>
+      <!-- FIN DE SECCIÓN DE CONTENIDO -->
+
+
+    </div>
+
+    <!-- FIN DE CONTENIDO -->
+
+
+    <!-- INICIO DE SECCIÓN PARA AGREGAR FOOTER -->
+    <div th:replace="plantilla/footer :: footer"></div>
+    <!-- FIN DE SECCIÓN PARA AGREGAR FOOTER-->
+
+  </div>
+
+
+  <!-- js -->
+		<script th:replace="plantilla/script :: scripts"></script>
+
+		<!-- toastr -->
+		<script type="text/javascript"
+			th:src="@{/plugins/toastr/toastr.min.js}"></script>
+		
+		<script th:if="${ result != null }" th:inline="javascript">
+			val = /*[[${result.result}]]*/null;
+			texto = /*[[${result.mensaje}]]*/null;
+			
+			if(val == true){
+				toastr.success(texto)
+			}
+			if(val == false){
+				toastr.error(texto)
+			}		
+		</script>
+		<!-- /.toastr -->
+		<!-- /.js -->
+
+
+	</div>
+	<!-- FIN DE layout:fragment="content" -->
+
+</body>

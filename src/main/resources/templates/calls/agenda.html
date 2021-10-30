@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<!-- estilos y título -->
+<head th:replace="plantilla/head :: header"></head>
+
+<!-- data tables -->
+<link rel="stylesheet"
+	th:href="@{/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+	th:href="@{/plugins/datatables-responsive/css/responsive.bootstrap4.min.css}">
+<!-- /.data tables -->
+
+<link rel="stylesheet" th:href="@{/plugins/toastr/toastr.min.css}">
+<!-- /.estilos y título -->
+
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+  <div class="wrapper">
+
+    <!--INICIO SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+    <nav th:insert="plantilla/navbar :: nav"></nav>
+    <!--FIN DE SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+
+
+    <!-- INICIO DE SECCIÓN PARA EL MENU -->
+    <div th:insert="plantilla/menu :: menu"></div>
+    <!--  FIN DE SECCIÓN PARA EL MENU -->
+
+
+    <!--INICIO DE CONTENIDO-->
+    <div class="content-wrapper">
+
+
+      <!-- INICIO DE ENCABEZADO DE CONTENIDO-->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">Registro de Llamada</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a th:href="@{'/home'}">Home</a></li>
+                <li class="breadcrumb-item"><a th:href="@{'/chat/list'}">Registros de Llamadas</a></li>
+                <li class="breadcrumb-item active">Registro</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN DE ENCABEZADO DE CONTENIDO -->
+
+
+      <!-- SECCIÓN DE CONTENIDO -->
+      <section class="content">
+         <div class="container-fluid">
+	 		 <div class="row">
+			 	<div class = "col-md-12">
+			 	<div class="container-fluid">
+
+					<!-- Red de linea -->
+					<div class="card card-primary card-outline">
+						<div class="card-header">
+							<h3 class="card-title" style="padding-top: 6px;">
+								<i class="fas fa-list"></i>&nbsp;&nbsp; Estado de Red de Línea
+							</h3>
+						</div>
+
+						<div class="card-body">
+							<div>
+								<label>Central telefónica</label>
+								<input type="text" id="centralTelephoneName" th:value="${myTelephoneLine.centralTelephone?.name}" disabled/>
+							</div>
+							<div>
+								<label>Mi número de teléfono</label>
+								<input type="text" id="myTelephoneLineId" th:value="${myTelephoneLine.id}" disabled/>
+							</div>
+							<br/>
+							<div>
+								<button id="connect" onclick="connect();">Conectar a Red</button>
+								<button id="disconnect" disabled="disabled" onclick="disconnect();">
+									Desconectar a Red
+								</button>
+							</div>
+							<br/>
+							<div id="conversationDiv" hidden>
+								<input type="text" id="text" placeholder="Write a message..."/>
+								<button id="sendMessage" onclick="sendMessage();">Send</button>
+								<p id="response"></p>
+							</div>
+						</div>
+					</div>
+					<!-- /Red de linea -->
+
+
+			 		<!-- Agenda Telefonica  -->
+					<div class="card">
+					
+						<div class = "card-header">
+							<div class = "row justify-content-around">
+								<div class="col-md-6 col-sm-12">
+									<h4>Agenda</h4>
+								</div>
+							</div>
+						</div>
+						
+						<div class = "card-body">
+
+							<table id="data_table"
+								   class="table table-sm table-striped table-hover td-responsive table-bordered custom-data-table">
+								<thead>
+								<tr class="thead-dark">
+									<th>Id</th>
+									<th>Activo</th>
+									<th>Username</th>
+									<th>Central Telefónica</th>
+									<th>Actualizado</th>
+									<th>Opciones</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr th:each="objeto : ${telephoneLinesList}">
+									<td th:text="${objeto.id}" style="vertical-align: middle;"></td>
+									<td th:text="${objeto.enabled}" style="vertical-align: middle;"></td>
+									<td th:text="${objeto.user?.username}" style="vertical-align: middle;"></td>
+									<td th:text="${objeto.centralTelephone?.name}" style="vertical-align: middle;"></td>
+									<td th:text="${objeto.updatedAt}" style="vertical-align: middle;"></td>
+									<td>
+										<a sec:authorize="hasAuthority('ADMIN')"
+										   class="btn btn-sm btn-default waves-effect waves-light"
+										   th:href="@{'/calls/edit/'+${objeto.id}}"><i
+												class="fa fa-pen"></i></a>&nbsp;
+										<button type="button" class="btn btn-primary" th:onclick="|requestCall(${objeto.id})|">
+											<i class="fa fa-phone"></i>
+										</button>
+									</td>
+
+								</tr>
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+			 		</div>
+			 	</div>
+
+
+			 </div>        
+         </div>
+      </section>
+      <!-- FIN DE SECCIÓN DE CONTENIDO -->
+
+		<!-- Modal Calls -->
+		<div class="modal fade" id="callModal" tabindex="-1" role="dialog" aria-labelledby="callModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="callModalLabel">Modal title</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<p id="callModalBody"></p>
+						</div>
+
+						<div id="countUp" class="row" >
+							<label id="minutes">00</label>
+							<label id="colon">:</label>
+							<label id="seconds">00</label>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="rejectBtn" type="button" class="btn btn-secondary" onclick="handlerButtonActions('Rechazar')">Rechazar</button>
+						<button id="receiveBtn" type="button" class="btn btn-primary" onclick="handlerButtonActions('Recibir')">Recibir</button>
+						<button id="cancelBtn" type="button" class="btn btn-secondary" onclick="handlerButtonActions('Cancelar')">Cancelar</button>
+						<button id="endBtn" type="button" class="btn btn-primary" onclick="handlerButtonActions('Finalizar')">Finalizar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+    </div>
+
+    <!-- FIN DE CONTENIDO -->
+
+
+    <!-- INICIO DE SECCIÓN PARA AGREGAR FOOTER -->
+    <div th:replace="plantilla/footer :: footer"></div>
+    <!-- FIN DE SECCIÓN PARA AGREGAR FOOTER-->
+
+  </div>
+
+
+  <!-- INICIO DE SECCIÓN PARA AGREGAR SCRIPTS-->
+  <script th:replace="plantilla/script :: scripts"></script>
+
+  <!-- Socket client -->
+  <script type="text/javascript" th:src="@{/js/web-socket/sockjs-0.3.4.js}"></script>
+  <script type="text/javascript" th:src="@{/js/web-socket/stomp.js}"></script>
+  <script type="text/javascript" th:src="@{/js/web-socket/count-up-duration.js}"></script>
+  <script type="text/javascript" th:src="@{/js/web-socket/call-modal-handler.js}"></script>
+  <script type="text/javascript" th:src="@{/js/web-socket/calling.js}"></script>
+  <!-- / Socket client -->
+
+  <!-- toastr -->
+  <script type="text/javascript" th:src="@{/plugins/toastr/toastr.min.js}"></script>
+
+  <script th:if="${ result != null }" th:inline="javascript">
+			val = /*[[${result.result}]]*/null;
+			texto = /*[[${result.mensaje}]]*/null;
+			
+			if(val == true){
+				toastr.success(texto)
+			}
+			if(val == false){
+				toastr.error(texto)
+			}		
+		</script>
+		<!-- /.toastr -->
+		<!-- /.js -->
+  
+  
+  <!-- FIN DE SECCIÓN PARA AGREGAR SCRIPTS -->
+  
+</body>
+
+</html>

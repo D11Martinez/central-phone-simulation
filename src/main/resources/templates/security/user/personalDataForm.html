@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<!-- estilos y título -->
+<head th:replace="plantilla/head :: header"></head>
+
+<!-- data tables -->
+<link rel="stylesheet"
+	th:href="@{/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css}">
+<link rel="stylesheet"
+	th:href="@{/plugins/datatables-responsive/css/responsive.bootstrap4.min.css}">
+<!-- /.data tables -->
+
+<link rel="stylesheet" th:href="@{/plugins/toastr/toastr.min.css}">
+<!-- /.estilos y título -->
+
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+  <div class="wrapper">
+
+    <!--INICIO SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+    <nav th:insert="plantilla/navbar :: nav"></nav>
+    <!--FIN DE SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+
+
+    <!-- INICIO DE SECCIÓN PARA EL MENU -->
+    <div th:insert="plantilla/menu :: menu"></div>
+    <!--  FIN DE SECCIÓN PARA EL MENU -->
+
+
+    <!--INICIO DE CONTENIDO-->
+    <div class="content-wrapper">
+
+
+      <!-- INICIO DE ENCABEZADO DE CONTENIDO-->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">Informaci&oacute;n Personal</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a th:href="@{'/home'}">Home</a></li>
+                <li class="breadcrumb-item active">Informaci&oacute;n Personal</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN DE ENCABEZADO DE CONTENIDO -->
+
+
+      <!-- SECCIÓN DE CONTENIDO -->
+      <section class="content">
+         <div class="container-fluid">
+	 		 <div class="row">
+			 	<div class = "col-md-12">
+			 	<div class="container-fluid">
+			 		<!-- Registro de examenes -->
+					<div class="card">
+					
+						<div class = "card-header">
+							<div class = "row justify-content-around">
+								<div class="col-md-6 col-sm-12">
+									<h4>Formulario de registro</h4>
+								</div>
+								<div class="col-md-6 col-sm-12">
+									<a th:href = "@{'/home'}" class="button btn-sm btn-danger  float-sm-right mr-1 mb-1">Cancelar</a>
+									<a sec:authorize="hasAuthority('WRITE_PERFIL_ASPIRANTE')" th:if = "${objeto != null}" th:href="@{'/aspirantes/nuevo'}" class="button btn-sm btn-success  float-sm-right mr-1 mb-1">Registrar Aspirante</a>
+									<a sec:authorize="hasAuthority('WRITE_PERFIL_ASPIRANTE')" th:if = "${objeto != null}" th:href="@{'/perfil_aspirante/consultar_perfil/'+${id}}" class="button btn-sm btn-info  float-sm-right mr-1 mb-1">Consultar Perfil</a>
+									<a sec:authorize="hasAuthority('WRITE_PERFIL_ASPIRANTE')" th:if = "${objeto != null}" th:href="@{'/perfil_aspirante/crear_perfil'}" class="button btn-sm btn-warning  float-sm-right mr-1 mb-1">Completar Perfil</a>
+									<button th:if = "${objeto != null}" type="submit" form="objForm" name="btnSave"  class="button btn-sm btn-primary  float-sm-right mr-1">Guardar</button>
+
+								</div>
+							</div>
+						</div>
+						
+						<div class = "card-body">
+							
+							<!-- FORMULARIO DE ACTUALIZACION DE DATOS PERSONALES -->
+							<form th:if = "${objeto != null}" name ="objForm" id ="objForm" class="" th:object="${objeto}" method = "POST">
+								<input type = "hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}" />
+								
+								<input type = "hidden" name = "id" th:field = "*{id}" />
+								<input type = "hidden" name = "usuario" th:field = "*{usuario}">
+								<input type = "hidden" name = "empresa" th:field = "*{empresa}">
+								<input type = "hidden" name = "bolsa" th:field = "*{bolsa}">
+								
+								<div class = "row justify-content-around">
+									<div class="col-md-6 col-sm-12 p-3">
+										<h5>Datos Personales</h5>
+
+									   <div class="form-group">
+									   	  <label class="float-label">Nombres: </label>
+	                                      <input type="text" name="nombre" id="nombre" class="form-control" required th:field="*{nombre}"  maxlength="50" placeholder="*Nombres">
+	                                   </div>									
+	
+									   <div class="form-group">
+									   	  <label class="float-label">Apellidos: </label>
+	                                      <input type="text" name="apellido" id="apellido" class="form-control" required th:field="*{apellido}"  maxlength="50" placeholder="*Apellidos">
+	                                   </div>	
+
+									   <div class="form-group">
+									   	  <label class="float-label">DUI: </label>
+										  <input type="text" name="dui" class="form-control" required th:field="*{dui}" maxlength = "10" placeholder = "*DUI (Solo números y guiones)" pattern="[0-9\-]+">	 
+	                                   </div>	
+
+									   <div class="form-group">
+									   	  <label class="float-label">NIT: </label>
+										  <input type="text" name="nit" class="form-control" required th:field="*{nit}" maxlength = "15" placeholder = "*NIT (Solo números y guiones)" pattern="[0-9\-]+">	 
+	                                   </div>	
+
+									   <div class="form-group">
+									   	  <label class="float-label">Nacionalidad: </label>
+	                                      <input type="text" name="nacionalidad" id="nacionalidad" class="form-control" required th:field="*{nacionalidad}"  maxlength="25" placeholder="*Nacionalidad">
+	                                   </div>	                               
+	                                   <label th:text = "${objeto.bolsa}"></label>           
+	                                   <label th:text = "${objeto.empresa}"></label>                           										
+									</div>						
+								</div>									
+							</form>
+							<h6 th:if = "${objeto == null}"> No tiene Datos personales registrados o no se pudo recuperar su informaci&oacute;n.</h6>				
+						</div>
+					</div>
+			 		</div>
+			 	</div>
+
+
+			 </div>        
+         </div>
+      </section>
+      <!-- FIN DE SECCIÓN DE CONTENIDO -->
+
+
+    </div>
+
+    <!-- FIN DE CONTENIDO -->
+
+
+    <!-- INICIO DE SECCIÓN PARA AGREGAR FOOTER -->
+    <div th:replace="plantilla/footer :: footer"></div>
+    <!-- FIN DE SECCIÓN PARA AGREGAR FOOTER-->
+
+  </div>
+
+
+  <!-- INICIO DE SECCIÓN PARA AGREGAR SCRIPTS-->
+  <script th:replace="plantilla/script :: scripts"></script>
+  
+   <!-- FILTRO EN SELECT -->
+  <script type="text/javascript" th:src="@{/js/custom/SelectFilter.js}"></script>
+  
+  
+      		<!-- toastr -->
+		<script type="text/javascript"
+			th:src="@{/plugins/toastr/toastr.min.js}"></script>
+
+		<script th:if="${ result != null }" th:inline="javascript">
+			val = /*[[${result.result}]]*/null;
+			texto = /*[[${result.mensaje}]]*/null;
+			
+			if(val == true){
+				toastr.success(texto)
+			}
+			if(val == false){
+				toastr.error(texto)
+			}		
+		</script>
+		<!-- /.toastr -->
+		<!-- /.js -->
+  
+  
+  <!-- FIN DE SECCIÓN PARA AGREGAR SCRIPTS -->
+  
+</body>
+
+</html>

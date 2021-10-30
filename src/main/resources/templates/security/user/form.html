@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+
+<!-- INICIO DE SECCIÓN PARA AGREGAR ESTILOS -->
+
+<head th:replace="plantilla/head :: header"></head>
+<!--  FIN DE SECCIÓN PARA AGREGAR ESTILOS -->
+
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+  <div class="wrapper">
+
+    <!--INICIO SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+    <nav th:insert="plantilla/navbar :: nav"></nav>
+    <!--FIN DE SECCIÓN DE BARRA DE NAVEGACIÓN SUPERIOR-->
+
+
+    <!-- INICIO DE SECCIÓN PARA EL MENU -->
+    <div th:insert="plantilla/menu :: menu"></div>
+    <!--  FIN DE SECCIÓN PARA EL MENU -->
+
+
+    <!--INICIO DE CONTENIDO-->
+    <div class="content-wrapper">
+
+
+      <!-- INICIO DE ENCABEZADO DE CONTENIDO-->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">Registro de Usuarios</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a th:href="@{'/home'}">Home</a></li>
+                <li class="breadcrumb-item"><a th:href="@{'/usuarios'}">Usuarios</a></li>
+                <li class="breadcrumb-item active">Registro</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN DE ENCABEZADO DE CONTENIDO -->
+
+
+      <!-- SECCIÓN DE CONTENIDO -->
+      <section class="content">
+         <div class="container-fluid">
+	 		 <div class="row">
+			 	<div class = "col-md-12">
+			 	<div class="container-fluid">
+			 		<!-- Registro de roles  -->
+					<div class="card">
+					
+						<div class = "card-header">
+							<div class = "row justify-content-around">
+								<div class="col-md-6 col-sm-12">
+								<h4>Formulario de registro</h4>
+								</div>
+								<div class="col-md-6 col-sm-12">
+									<a sec:authorize="hasAuthority('READ_USERS')"  th:href = "@{'/usuarios'}" class="btn-sm btn-danger  float-right mr-1 mb-1">Cancelar</a>
+									<button type="submit" form = "userForm" name="btnSave" class="btn-sm btn-primary  float-right mr-1 mb-1">Guardar</button>
+								</div>
+							</div>
+						</div>
+						
+						<div class = "card-body">
+							
+							<!-- FORMULARIO DE REGISTRO DE USUARIOS -->
+							<form name ="userForm" id = "userForm" class="" th:object="${userModel}" method="POST">
+								<input type = "hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}" />
+								<input type = "hidden" name = "id" th:field="*{id}" />
+								<div class = "row justify-content-around">
+									<div class="col-md-6 col-sm-12 p-3">
+										<h5>Informaci&oacute;n general</h5>
+
+	                                   	<div class="form-group form-default" >
+	                                   		<label class="float-label">Correo Electr&oacute;nico</label>
+	                                      	<input type="email" name="footer-email" class="form-control" th:field="*{email}" minlength="8" maxlength = "80" placeholder = "Correo electrónico" th:disabled = "${isEdit}">
+	                                    </div>		
+	                                   
+	                                 	<div class="form-group form-default">
+	                                   		<label class="float-label">Contrase&ntilde;a</label>
+	                                   		<input type="password" name="footer-email" class="form-control" required th:field="*{password}" minlength="8" maxlength = "60" placeholder = "Clave de acceso">
+	                                   	</div>		
+	                                   							
+	                                 	<div class="form-group form-default">
+	                                   		<label class="float-label">Confirme su contrase&ntilde;a</label>
+	                                   		<input type="password" name="footer-email" class="form-control" required th:field="*{passConf}" minlength="8" maxlength = "60" placeholder = "Confirme clave de acceso">
+	                                   	</div>	
+	                                   											
+										<div class="form-group form-default">
+										    <label class="float-label">
+										      	<input class="form-check-input" type="checkbox" th:field ="*{bloqueado}"> Bloqueado
+										    </label>									      
+										 </div>
+									</div>
+									
+									<div class="col-md-6 col-sm-12 p-3">
+										<h5>Asignaci&oacute;n de roles</h5>
+										
+										<div class=" form-group">
+		                                   	 <label th:text="Roles" class="row-form-label form-control-label m-2" ></label>
+											 <input class="form-control InputFilter" type="text" placeholder="Buscar...">
+											 <br>
+											 <div class="list-group ListFilter" style ="height:200px; overflow-y: scroll;">
+											  	<div class = "form-inline" th:each="rol :${roles}">
+													<input class="form-inline-xs" type = "checkbox" name ="roles" th:field="${userModel.roles}" th:value="${rol.id}">											  		
+											  		<label th:text = "${rol.name}" class = "ml-2"></label>											  	
+											 	</div>												
+											 </div> 
+											 <br>		                                   
+											 <input type = "button" id="selectAll" class = " btn-sm btn-default SelectAll" value = "Todos">
+											 <input type = "button" id="selectClear" class = " btn-sm btn-default SelectClear" value = "Limpiar">
+										</div> 
+										
+									</div>								
+								</div>									
+							</form>
+											
+						</div>
+					</div>
+			 		</div>
+			 	</div>
+
+
+			 </div>        
+         </div>
+      </section>
+      <!-- FIN DE SECCIÓN DE CONTENIDO -->
+
+
+    </div>
+
+    <!-- FIN DE CONTENIDO -->
+
+
+    <!-- INICIO DE SECCIÓN PARA AGREGAR FOOTER -->
+    <div th:replace="plantilla/footer :: footer"></div>
+    <!-- FIN DE SECCIÓN PARA AGREGAR FOOTER-->
+
+  </div>
+
+
+  <!-- INICIO DE SECCIÓN PARA AGREGAR SCRIPTS-->
+  <script th:replace="plantilla/script :: scripts"></script>
+  
+ <!-- FILTRO EN SELECT -->
+  <script type="text/javascript" th:src="@{/js/custom/SelectFilter.js}"></script>
+  
+    		<!-- toastr -->
+		<script type="text/javascript"
+			th:src="@{/plugins/toastr/toastr.min.js}"></script>
+
+		<script th:if="${ result != null }" th:inline="javascript">
+			val = /*[[${result.result}]]*/null;
+			texto = /*[[${result.mensaje}]]*/null;
+			
+			if(val == true){
+				toastr.success(texto)
+			}
+			if(val == false){
+				toastr.error(texto)
+			}		
+		</script>
+
+		<!-- /.toastr -->
+		<!-- /.js -->
+  
+  
+  <!-- FIN DE SECCIÓN PARA AGREGAR SCRIPTS -->
+  
+</body>
+
+</html>

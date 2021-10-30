@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BTeam</title>
+    <meta name="description" content="Simuación de central telefónica BTEAM" />
+    <meta name="keywords" content="html template, css, free, one page, phone, calls, web design" />
+    <meta name="author" content="BTEAM" />
+
+    <!-- INICIO DE ESTILOS -->
+
+    <!-- Normalize -->
+    <link rel="stylesheet" type="text/css" th:href="@{login/css/normalize.css}">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{login/css/bootstrap.css}">
+    <!-- Owl -->
+    <link rel="stylesheet" type="text/css" th:href="@{login/css/owl.css}">
+    <!-- Animate.css -->
+    <link rel="stylesheet" type="text/css" th:href="@{login/css/animate.css}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" th:href="@{login/fonts/font-awesome-4.1.0/css/font-awesome.min.css}">
+    <!-- Elegant Icons -->
+    <link rel="stylesheet" type="text/css" th:href="@{login/fonts/eleganticons/et-icons.css}">
+    <!-- Main style -->
+    <link rel="stylesheet" type="text/css" th:href="@{login/css/estilo.css}">
+    <!-- TOASTR -->
+    <link rel="stylesheet" th:href="@{/plugins/toastr/toastr.min.css}">
+
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css}">
+
+    <style>
+body {margin:0;font-family:Arial}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 12px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.topnav a:hover, .dropdown:hover .dropbtn {
+  background-color: #555;
+  color: white;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child), .dropdown .dropbtn {
+    display: none;
+  }
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .topnav.responsive {position: relative;}
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+  .topnav.responsive .dropdown {float: none;}
+  .topnav.responsive .dropdown-content {position: relative;}
+  .topnav.responsive .dropdown .dropbtn {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+}
+</style>
+
+    <!-- FIN DE ESTILOS -->
+</head>
+
+<body>
+<!-- INICIO DE PRELOADER -->
+<div class="preloader">
+    <img th:src="@{img/login/loader.gif}" alt="Preloader image">
+</div>
+<!-- INICIO DE PRELOADER -->
+
+<div class="topnav" id="myTopnav">
+
+
+    <ul class="nav navbar-nav navbar-right main-nav">
+        <li><a href="#intro">BTeam</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#modal1"
+               class="btn btn-blue">Iniciar sesión</a></li>
+        <li><a href="javascript:void(0);" style="font-size: 15px;"
+               class="icon" onclick="myFunction()">&#9776;</a></li>
+    </ul>
+
+
+</div>
+
+<!-- INICIO DE SECCIÓN DE INTRODUCCIÓN -->
+<header id="intro" style="background:url('img/login/45.jpg'); background-size:cover;">
+    <div class="container">
+        <div class="table">
+            <div class="header-text">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h3 class="light white">Simulación de central telefónica BTEAM</h3>
+                        <span class="typed-cursor">|</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- FIN DE SECCIÓN DE INTRODUCCIÓN -->
+
+<!-- INICIO DE MODAL DE INICIO DE SESIÓN -->
+<!-- Modal -->
+<div class="modal fade" id="modal1" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="background:url('img/login/e.jpg'); background-size:cover;">
+
+            <div class="modal-header">
+                <button type="button" class="btn btn-danger close close-link" data-dismiss="modal">&times;</button>
+                <h4  class="modal-title white">Iniciar sesión</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class = "row p-5  ">
+
+                    <form id = "loginForm" name = "loginForm" class="popup-form" th:action = "@{/logincheck}" method = "POST">
+                        <input type = "hidden" name = "${_csrf.parameterName}" value = "${_csrf.token}" />
+
+                        <input type="text" id ="username" name ="username" class="form-control form-white" placeholder="Username" required>
+                        <input type="password" id ="password" name = "password" class="form-control form-white" placeholder="Contraseña" required>
+
+                        <button type="submit" form = "loginForm" id = "btnSubtmitLogin" class="btn btn-submit">Iniciar sesión</button>
+                        <!-- Botones para login en dos pasos -->
+                        <button type="button" id = "btnNextLogin" class="btn btn-submit" onclick = "checkUsername();"  style = "background-color:dodgerblue; border-color:dodgerblue; color:white;">Siguiente</button>
+                        <button type="button" id = "btnReturnLogin" class="btn btn-submit" onclick = "returnLogin();"  style = "background-color:dodgerblue; border-color:dodgerblue; color:white;">Retroceder</button>
+                        <br/>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- FIN DE MODAL DE INICIO DE SESIÓN -->
+
+
+<!-- INICIO DE FOOTER -->
+<footer style="background:url('img/login/footer.jpg'); background-size:cover;">
+    <div class="container">
+        <div class="row bottom-footer text-center-mobile">
+            <div class="col-sm-8">
+                <p>&copy; 2021 All Rights Reserved. Powered by BTeam </p>
+            </div>
+            <div class="col-sm-4 text-right text-center-mobile">
+                <ul class="social-footer">
+                    <li><a th:href="@{http://www.facebook.com}"><i class="fa fa-facebook"></i></a></li>
+                    <li><a th:href="@{http://www.twitter.com}"><i class="fa fa-twitter"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>s
+<!-- FIN DE FOOTER -->
+
+<!-- INICIO DE SCRIPTS-->
+<script th:src="@{login/js/jquery-1.11.1.min.js}"></script>
+<script th:src="@{login/js/owl.carousel.min.js}"></script>
+<script th:src="@{login/js/bootstrap.min.js}"></script>
+<script th:src="@{login/js/wow.min.js}"></script>
+<script th:src="@{login/js/typewriter.js}"></script>
+<script th:src="@{login/js/jquery.onepagenav.js}"></script>
+<script th:src="@{login/js/main.js}"></script>
+
+<!-- FIN DE SCRIPTS-->
+
+<!-- toastr -->
+<script type="text/javascript" th:src="@{/plugins/toastr/toastr.min.js}"></script>
+
+<script th:src="@{login/js/custom-login.js}"></script>
+
+<script th:if="${ result != null }" th:inline="javascript">
+		val = /*[[${result.result}]]*/null;
+		texto = /*[[${result.mensaje}]]*/null+" Inicie sesión con sus credenciales.";
+
+		if(val == true){
+			toastr.success(texto)
+		}
+		if(val == false){
+			toastr.error(texto)
+		}
+	</script>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+<!-- /.toastr -->
+<!-- /.js -->
+
+</body>
+
+</html>
