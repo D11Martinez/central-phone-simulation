@@ -69,10 +69,6 @@ function statesHandler(incomingMessage) {
       break;
 
     case inalcanzable:
-      // especial beheaviour
-      // Update State Line as available
-      // send message
-      // Update Modal Content
       break;
 
     case finalizada:
@@ -83,6 +79,7 @@ function statesHandler(incomingMessage) {
       break;
 
     case cancelada:
+      stopCountUp();
       updateLineState(null, true, null, cancelada);
       closeCallModal();
       showNotification(cancelada, 'info', formatDuration());
@@ -96,6 +93,7 @@ function statesHandler(incomingMessage) {
       break;
 
     case noDefinido:
+      stopCountUp();
       updateLineState(null, true, null, noDefinido);
       closeCallModal();
       showNotification(noDefinido, 'error', formatDuration());
@@ -131,6 +129,7 @@ function handlerButtonActions(typeButton) {
     case rechazar:
       const { rechazada } = lineStatesList;
 
+      stopCountUp();
       closeCallModal();
       sendMessage(callLogId, lineId, talkingWithLineId, rechazada, formatDuration());
       updateLineState(null, true, null, rechazada)
@@ -164,12 +163,17 @@ function handlerButtonActions(typeButton) {
 
 function filterIncomingMessage(messageOutput) {
   const message = JSON.parse(messageOutput.body);
-  const { lineId } = lineState;
-  const { to } = message;
+  const { solicitada } = lineStatesList
+  const { lineId, callState, available, talkingWithLineId } = lineState;
+  const { to, callLogId, state, from  } = message;
 
   if (to == lineId) {
     showMessageOutput(message);
     statesHandler(message);
+  }
+
+  if(from == lineId && state == solicitada){
+    updateLineState(callLogId, available, talkingWithLineId, callState)
   }
 }
 
@@ -229,7 +233,7 @@ function verifyUnreachebleState(){
   const { solicitada, inalcanzable } = lineStatesList;
   const {callLogId, lineId, talkingWithLineId} = lineState;
 
-  if(lineState.callState == solicitada ) {
+  if(lineState.callState == solicitada  & applyCounter) {
     sendMessage(callLogId, lineId, talkingWithLineId, inalcanzable, formatDuration());
     updateLineState(null, true, null, inalcanzable);
     closeCallModal();
@@ -256,7 +260,8 @@ function requestCall(receiverTelephoneLineId) {
     const waitTime = Number(customWaitTimeSeconds) > 0 ? customWaitTimeSeconds : 30;
   
     // verify state after 30 seconds
-    setTimeout(verifyUnreachebleState, waitTime * 1000);
+    applyCounter = true;
+    //setTimeout(verifyUnreachebleState, waitTime * 1000);
   }else{
     toastr.error('Su línea no está disponible en este momento.');
   }

@@ -19,6 +19,12 @@
 <link rel="stylesheet" th:href="@{/plugins/toastr/toastr.min.css}">
 <!-- /.estilos y título -->
 
+	<style>
+		.modal-header .close {
+		  display:none;
+		}
+	</style>
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -73,7 +79,7 @@
 							</h3>
 						</div>
 
-						<div class="card-body">
+						<div class="card-body" th:if="${myTelephoneLine}">
 							<div class="row">
 								<div class="col-md-4 col-xs-6">
 									<label>Central telefónica</label>
@@ -136,7 +142,7 @@
 									<th>Opciones</th>
 								</tr>
 								</thead>
-								<tbody>
+								<tbody th:if="${telephoneLinesList?.size() > 0}">
 								<tr th:each="objeto : ${telephoneLinesList}">
 									<td th:text="${objeto.id}" style="vertical-align: middle;"></td>
 									<td th:text="${objeto.enabled}" style="vertical-align: middle;"></td>

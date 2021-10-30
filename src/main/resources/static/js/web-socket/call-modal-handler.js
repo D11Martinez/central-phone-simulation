@@ -41,7 +41,7 @@ function updateModalContent(labelContent, bodyContent, activeBtnsIds) {
   }
   
   function showCallModal() {
-    $(callModalId).modal('show');
+    $(callModalId).modal({dialogClass: 'no-close', backdrop: 'static', keyboard: false});
   }
 
   function showNotification(state, messageType, duration) {

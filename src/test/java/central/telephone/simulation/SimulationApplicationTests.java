@@ -73,7 +73,7 @@ class SimulationApplicationTests {
 		telephoneLineService.createTelephoneLineIfNotExists(7007L, true,client07, centralTelephone1);
 		telephoneLineService.createTelephoneLineIfNotExists(7008L, true,client08, centralTelephone1);
 		telephoneLineService.createTelephoneLineIfNotExists(7009L, false, null,centralTelephone1);
-		telephoneLineService.createTelephoneLineIfNotExists(7010L, false, null,centralTelephone1);
+		telephoneLineService.createTelephoneLineIfNotExists(7010L, false, admin, centralTelephone1);
 
 		// Telephone lines centralTelephone2
 		telephoneLineService.createTelephoneLineIfNotExists(7011L, true, client09, centralTelephone2);
