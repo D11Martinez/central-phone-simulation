@@ -75,26 +75,31 @@
 
 						<div class="card-body">
 							<div class="row">
-								<div class="col-md-3 col-xs-6">
+								<div class="col-md-4 col-xs-6">
 									<label>Central telefónica</label>
 									<input type="text" id="centralTelephoneName" th:value="${myTelephoneLine.centralTelephone?.name}" disabled/>
 								</div>
-								<div class="col-md-3 col-xs-6">
+								<div class="col-md-4 col-xs-6">
+									<label>Tiempo de espera de llamada:</label>
+									<input type="text" id="centralTelephoneWaitTimeSeconds" th:value="${myTelephoneLine.centralTelephone?.waitTimeSeconds}" disabled/>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-4 col-xs-6">
 									<label>Mi número de teléfono</label>
 									<input type="text" id="myTelephoneLineId" th:value="${myTelephoneLine.id}" disabled/>
 								</div>
-								<div class="col-md-3 col-xs-6">
+								<div class="col-md-4 col-xs-6">
 									<label>Estado de Línea:</label>
 									<input type="text" id="myStateLine" value="No Disponible" disabled/>
 								</div>
-								<div class="col-md-3 col-xs-6">
+								<div class="col-md-4 col-xs-6">
 									<button id="connect" onclick="connect();">Conectar a Red</button>
 									<button id="disconnect" disabled="disabled" onclick="disconnect();">
 										Desconectar a Red
 									</button>
 								</div>
-							</div>
-							<div class="row">
 								<div id="conversationDiv" class="col-md-6" hidden>
 									<input type="text" id="text" placeholder="Write a message..."/>
 									<button id="sendMessage" onclick="sendMessage();">Send</button>

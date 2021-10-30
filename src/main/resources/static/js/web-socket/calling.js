@@ -5,6 +5,8 @@ const disconnectId = '#disconnect';
 const conversationDivId = '#conversationDiv';
 const myStateLineId = '#myStateLine'
 
+const waitTimeSecondsId = '#centralTelephoneWaitTimeSeconds' 
+
 var lineState = {
   lineId: $(myTelephoneLineElementId).val(),
   available: true,
@@ -249,9 +251,12 @@ function requestCall(receiverTelephoneLineId) {
     updateModalContent(labelContent, bodyContent, [cancelBtnId]);   
     startCountUp();
     showCallModal();
+
+    const customWaitTimeSeconds = $(waitTimeSecondsId).val();
+    const waitTime = Number(customWaitTimeSeconds) > 0 ? customWaitTimeSeconds : 30;
   
     // verify state after 30 seconds
-    setTimeout(verifyUnreachebleState, 30000);
+    setTimeout(verifyUnreachebleState, waitTime * 1000);
   }else{
     toastr.error('Su línea no está disponible en este momento.');
   }
