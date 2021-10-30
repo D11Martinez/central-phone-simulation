@@ -3,6 +3,7 @@ var stompClient = null;
 const connectId = '#connect';
 const disconnectId = '#disconnect';
 const conversationDivId = '#conversationDiv';
+const myStateLineId = '#myStateLine'
 
 var lineState = {
   lineId: $(myTelephoneLineElementId).val(),
@@ -161,21 +162,19 @@ function handlerButtonActions(typeButton) {
 
 function filterIncomingMessage(messageOutput) {
   const message = JSON.parse(messageOutput.body);
-  const { lineId, available, talkingWithLineId, callState } = lineState;
-  const { solicitada } = lineStatesList;
-  const {callLogId, to, from } = message;
+  const { lineId } = lineState;
+  const { to } = message;
 
   if (to == lineId) {
     showMessageOutput(message);
     statesHandler(message);
   }
-
-  //if(from == lineId && callState == solicitada){
-  //  updateLineState(callLogId, available, talkingWithLineId, callState);
-  //}
 }
 
 function updateLineState(callLogId, available, talkingWithLineId, callState) {
+
+  $(myStateLineId).val(available? 'Disponible':'No Disponible');
+
   lineState.callLogId = callLogId;
   lineState.available = available;
   lineState.talkingWithLineId = talkingWithLineId;
@@ -183,6 +182,7 @@ function updateLineState(callLogId, available, talkingWithLineId, callState) {
 }
 
 function setConnected(connected) {
+  $(myStateLineId).val(connected ? 'Disponible' : 'No Disponible')
   document.getElementById('connect').disabled = connected;
   document.getElementById('disconnect').disabled = !connected;
   document.getElementById('conversationDiv').style.visibility
@@ -236,18 +236,23 @@ function verifyUnreachebleState(){
 }
 
 function requestCall(receiverTelephoneLineId) {
-  const { lineId } = lineState;
-  const { solicitada } = lineStatesList;
-  const { cancelBtnId } = actionButtonsIds;
-  const labelContent = 'Llamando...';
-  const bodyContent = `Llamando a ${receiverTelephoneLineId}. Espere...`;
 
-  updateLineState(false, receiverTelephoneLineId, solicitada);
-  sendMessage(null, lineId, receiverTelephoneLineId, solicitada, formatDuration());
-  updateModalContent(labelContent, bodyContent, [cancelBtnId]);   
-  startCountUp();
-  showCallModal();
-
-  // verify state after 30 seconds
-  setTimeout(verifyUnreachebleState, 30000);
+  if($(myStateLineId).val() === 'Disponible') {
+    const { callLogId, lineId } = lineState;
+    const { solicitada } = lineStatesList;
+    const { cancelBtnId } = actionButtonsIds;
+    const labelContent = 'Llamando...';
+    const bodyContent = `Llamando a ${receiverTelephoneLineId}. Espere...`;
+  
+    updateLineState(callLogId, false, receiverTelephoneLineId, solicitada);
+    sendMessage(null, lineId, receiverTelephoneLineId, solicitada, formatDuration());
+    updateModalContent(labelContent, bodyContent, [cancelBtnId]);   
+    startCountUp();
+    showCallModal();
+  
+    // verify state after 30 seconds
+    setTimeout(verifyUnreachebleState, 30000);
+  }else{
+    toastr.error('Su línea no está disponible en este momento.');
+  }
 }

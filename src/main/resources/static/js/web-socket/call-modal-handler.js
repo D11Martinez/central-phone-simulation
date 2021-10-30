@@ -62,7 +62,7 @@ function updateModalContent(labelContent, bodyContent, activeBtnsIds) {
 
   function showMessageOutput(messageOutput) {
     const { callLogId, from, to, state, timeStamp } = messageOutput;
-    const messageLog = `${callLogId} | ${from}->${to}:${state} (${timeStamp})`
+    const messageLog = `${callLogId} | ${from}->${to}:${state} (${timeStamp})`;
   
     const response = $(responseId);
     const p = document.createElement('p');

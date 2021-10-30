@@ -1,5 +1,7 @@
 package central.telephone.simulation.services;
 
+import central.telephone.simulation.entities.CallLog;
+import central.telephone.simulation.entities.CentralTelephone;
 import central.telephone.simulation.entities.TelephoneLine;
 import central.telephone.simulation.entities.UserEntity;
 import central.telephone.simulation.exceptions.InstanceAlreadyExistsException;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service("telephoneLineService")
 public class TelephoneLineService {
@@ -27,13 +30,12 @@ public class TelephoneLineService {
   @Qualifier("userRepository")
   private UserRepository userRepository;
 
-  public TelephoneLine createTelephoneLineIfNotExists(TelephoneLine telephoneLine) throws NotFoundException {
-    if(telephoneLine.getId() == null) throw new NotFoundException("No se encontró el ID de la Linea");
+  public TelephoneLine createTelephoneLineIfNotExists(Long id, Boolean enabled,UserEntity user, CentralTelephone centralTelephone) {
+    Optional<TelephoneLine> currentTelephoneLine = telephoneLineRepository.findById(id);
 
-    Optional<TelephoneLine> currentTelephoneLine = telephoneLineRepository.findById(telephoneLine.getId());
+    if(currentTelephoneLine.isPresent()) return null;
 
-    if(currentTelephoneLine.isPresent()) throw new InstanceAlreadyExistsException("El Id de la linea ya está registrado.");
-
+    TelephoneLine telephoneLine = new TelephoneLine(id, enabled,user, centralTelephone);
     return telephoneLineRepository.save(telephoneLine);
   }
 
@@ -52,7 +54,9 @@ public class TelephoneLineService {
 
     if(userLine == null) throw  new NotFoundException("El usuario no tiene una linea de teléfono asignada");
 
-    return telephoneLineRepository.findByCentralTelephone(userLine.getCentralTelephone());
+    List<TelephoneLine> telephoneLinesList = telephoneLineRepository.findByCentralTelephone(userLine.getCentralTelephone());
+
+    return telephoneLinesList.stream().filter(line -> line.getUser() != null).collect(Collectors.toList());
   }
 
   public TelephoneLine findTelephoneLineByUser(User userDetails) throws NotFoundException {

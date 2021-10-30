@@ -74,26 +74,32 @@
 						</div>
 
 						<div class="card-body">
-							<div>
-								<label>Central telefónica</label>
-								<input type="text" id="centralTelephoneName" th:value="${myTelephoneLine.centralTelephone?.name}" disabled/>
+							<div class="row">
+								<div class="col-md-3 col-xs-6">
+									<label>Central telefónica</label>
+									<input type="text" id="centralTelephoneName" th:value="${myTelephoneLine.centralTelephone?.name}" disabled/>
+								</div>
+								<div class="col-md-3 col-xs-6">
+									<label>Mi número de teléfono</label>
+									<input type="text" id="myTelephoneLineId" th:value="${myTelephoneLine.id}" disabled/>
+								</div>
+								<div class="col-md-3 col-xs-6">
+									<label>Estado de Línea:</label>
+									<input type="text" id="myStateLine" value="No Disponible" disabled/>
+								</div>
+								<div class="col-md-3 col-xs-6">
+									<button id="connect" onclick="connect();">Conectar a Red</button>
+									<button id="disconnect" disabled="disabled" onclick="disconnect();">
+										Desconectar a Red
+									</button>
+								</div>
 							</div>
-							<div>
-								<label>Mi número de teléfono</label>
-								<input type="text" id="myTelephoneLineId" th:value="${myTelephoneLine.id}" disabled/>
-							</div>
-							<br/>
-							<div>
-								<button id="connect" onclick="connect();">Conectar a Red</button>
-								<button id="disconnect" disabled="disabled" onclick="disconnect();">
-									Desconectar a Red
-								</button>
-							</div>
-							<br/>
-							<div id="conversationDiv" hidden>
-								<input type="text" id="text" placeholder="Write a message..."/>
-								<button id="sendMessage" onclick="sendMessage();">Send</button>
-								<p id="response"></p>
+							<div class="row">
+								<div id="conversationDiv" class="col-md-6" hidden>
+									<input type="text" id="text" placeholder="Write a message..."/>
+									<button id="sendMessage" onclick="sendMessage();">Send</button>
+									<p id="response"></p>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -133,11 +139,7 @@
 									<td th:text="${objeto.centralTelephone?.name}" style="vertical-align: middle;"></td>
 									<td th:text="${objeto.updatedAt}" style="vertical-align: middle;"></td>
 									<td>
-										<a sec:authorize="hasAuthority('ADMIN')"
-										   class="btn btn-sm btn-default waves-effect waves-light"
-										   th:href="@{'/calls/edit/'+${objeto.id}}"><i
-												class="fa fa-pen"></i></a>&nbsp;
-										<button type="button" class="btn btn-primary" th:onclick="|requestCall(${objeto.id})|">
+										<button th:if="${objeto.user != null}" type="button" class="btn btn-primary" th:onclick="|requestCall(${objeto.id})|">
 											<i class="fa fa-phone"></i>
 										</button>
 									</td>

@@ -7,6 +7,8 @@ import central.telephone.simulation.models.OutputMessage;
 import central.telephone.simulation.services.CallLogService;
 import central.telephone.simulation.services.TelephoneLineService;
 import javassist.NotFoundException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,8 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -28,6 +28,8 @@ public class CallController {
   public static final String AGENDA_LIST = "calls/agenda";
   public static final String CALL_LOG_LIST = "calls/list";
   public static final String CALL_LOG_DELETE = "calls/delete";
+
+  private static final Log LOG = LogFactory.getLog(CallController.class);
 
   @Autowired
   @Qualifier("callLogService")
@@ -40,7 +42,12 @@ public class CallController {
   @MessageMapping("call-service")
   @SendTo("/topic/call-log")
   public OutputMessage send(InputMessage inputMessage) throws Exception {
-    return callLogService.saveOrUpdate(inputMessage);
+    OutputMessage outputMessage = callLogService.saveOrUpdate(inputMessage);
+
+    LOG.info("METHOD: messageMapping() inputMessage =" + inputMessage);
+    LOG.info("METHOD: messageMapping() outputMessage =" + outputMessage);
+
+    return outputMessage;
   }
 
   @GetMapping("/list")
@@ -48,8 +55,6 @@ public class CallController {
   public String getListCallLog(Model model) {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     List<CallLog> callLogsList = callLogService.findAll();
-
-    System.out.println(callLogsList);
 
     model.addAttribute("user", user);
     model.addAttribute("callLogsList",callLogsList);
@@ -78,8 +83,6 @@ public class CallController {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     model.addAttribute("user", user);
-
-    System.out.println(callLog);
 
     return AGENDA_LIST;
   }

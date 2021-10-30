@@ -14,7 +14,7 @@ public class TelephoneLine  extends AuditModel {
   private Boolean enabled = true;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  private UserEntity user;
+  private UserEntity user = null;
 
   @ManyToOne(fetch = FetchType.EAGER)
   private CentralTelephone centralTelephone;
