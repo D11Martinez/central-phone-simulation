@@ -233,7 +233,7 @@ function verifyUnreachebleState(){
   const { solicitada, inalcanzable } = lineStatesList;
   const {callLogId, lineId, talkingWithLineId} = lineState;
 
-  if(lineState.callState == solicitada  & applyCounter) {
+  if(lineState.callState == solicitada) {
     sendMessage(callLogId, lineId, talkingWithLineId, inalcanzable, formatDuration());
     updateLineState(null, true, null, inalcanzable);
     closeCallModal();
@@ -260,7 +260,6 @@ function requestCall(receiverTelephoneLineId) {
     const waitTime = Number(customWaitTimeSeconds) > 0 ? customWaitTimeSeconds : 30;
   
     // verify state after 30 seconds
-    applyCounter = true;
     //setTimeout(verifyUnreachebleState, waitTime * 1000);
   }else{
     toastr.error('Su línea no está disponible en este momento.');

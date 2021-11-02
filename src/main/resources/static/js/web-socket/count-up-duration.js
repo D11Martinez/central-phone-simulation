@@ -3,7 +3,6 @@ let totalSeconds = 0;
 
 const minutesLabelId = "#minutes";
 const secondsLabelId = "#seconds";
-const applyCounter = false;
 
 // inverval count up //
 function startCountUp() {
@@ -42,6 +41,5 @@ function startCountUp() {
   }
   
   function stopCountUp() {
-    applyCounter = false;
     clearInterval(countUpInterval);
   }
