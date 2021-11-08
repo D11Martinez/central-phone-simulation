@@ -76,6 +76,7 @@ function statesHandler(incomingMessage) {
       updateLineState(null, true, null, finalizada);
       closeCallModal();
       showNotification(finalizada, 'success', formatDuration());
+      restartCountUp();
       break;
 
     case cancelada:
@@ -83,6 +84,7 @@ function statesHandler(incomingMessage) {
       updateLineState(null, true, null, cancelada);
       closeCallModal();
       showNotification(cancelada, 'info', formatDuration());
+      restartCountUp();
       break;
 
     case rechazada:
@@ -90,6 +92,7 @@ function statesHandler(incomingMessage) {
       updateLineState(null, true, null, rechazada);
       closeCallModal();
       showNotification(rechazada, 'info', );
+      restartCountUp();
       break;
 
     case noDefinido:
@@ -97,6 +100,7 @@ function statesHandler(incomingMessage) {
       updateLineState(null, true, null, noDefinido);
       closeCallModal();
       showNotification(noDefinido, 'error', formatDuration());
+      restartCountUp();
       break;
 
     default:
@@ -134,6 +138,7 @@ function handlerButtonActions(typeButton) {
       sendMessage(callLogId, lineId, talkingWithLineId, rechazada, formatDuration());
       updateLineState(null, true, null, rechazada)
       showNotification(rechazada, 'error', formatDuration());
+      restartCountUp();
       break;
 
     case cancelar:
@@ -144,6 +149,7 @@ function handlerButtonActions(typeButton) {
       sendMessage(callLogId, lineId, talkingWithLineId, cancelada, formatDuration());
       updateLineState(null, true, null, cancelada);
       showNotification(cancelada, 'info', formatDuration());
+      restartCountUp();
       break;
 
     case finalizar:
@@ -154,6 +160,7 @@ function handlerButtonActions(typeButton) {
       sendMessage(callLogId, lineId, talkingWithLineId, finalizada, formatDuration());
       updateLineState(null, true, null, finalizada);
       showNotification(finalizada, 'success', formatDuration());
+      restartCountUp();
       break;
 
     default:
