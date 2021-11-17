@@ -6,6 +6,7 @@ const conversationDivId = '#conversationDiv';
 const myStateLineId = '#myStateLine'
 
 const waitTimeSecondsId = '#centralTelephoneWaitTimeSeconds' 
+var reachebleCountId = 0;
 
 var lineState = {
   lineId: $(myTelephoneLineElementId).val(),
@@ -31,6 +32,8 @@ const actionsList = {
   cancelar: 'Cancelar',
   finalizar: 'Finalizar'
 }
+
+/** Functions definition */
 
 function statesHandler(incomingMessage) {
   const {callLogId, state, from } = incomingMessage;
@@ -63,12 +66,17 @@ function statesHandler(incomingMessage) {
       const labelContent = 'Llamada en curso...';
       const bodyContent = `En llamada con ${talkingWithLineId}`;
 
+      stopReachebleCounter();
       restartCountUp();
       updateLineState(callLogId, false, talkingWithLineId, recibida);
       updateModalContent(labelContent, bodyContent, [endBtnId]);
       break;
 
     case inalcanzable:
+      stopCountUp();
+      updateLineState(null, true, null, inalcanzable);
+      closeCallModal();
+      restartCountUp();
       break;
 
     case finalizada:
@@ -88,6 +96,7 @@ function statesHandler(incomingMessage) {
       break;
 
     case rechazada:
+      stopReachebleCounter();
       stopCountUp();
       updateLineState(null, true, null, rechazada);
       closeCallModal();
@@ -144,6 +153,7 @@ function handlerButtonActions(typeButton) {
     case cancelar:
       const { cancelada } = lineStatesList;
 
+      stopReachebleCounter();
       stopCountUp();
       closeCallModal();
       sendMessage(callLogId, lineId, talkingWithLineId, cancelada, formatDuration());
@@ -241,11 +251,25 @@ function verifyUnreachebleState(){
   const {callLogId, lineId, talkingWithLineId} = lineState;
 
   if(lineState.callState == solicitada) {
+    stopCountUp();
     sendMessage(callLogId, lineId, talkingWithLineId, inalcanzable, formatDuration());
     updateLineState(null, true, null, inalcanzable);
     closeCallModal();
     showNotification(inalcanzable, 'error', formatDuration());
+    restartCountUp();
   }
+}
+
+function startReachebleCounter(){
+  const customWaitTimeSeconds = $(waitTimeSecondsId).val();
+  const waitTime = Number(customWaitTimeSeconds) > 0 ? customWaitTimeSeconds : 30;
+
+    // verify state after 30 seconds
+    reachebleCountId = setTimeout(verifyUnreachebleState, waitTime * 1000);
+}
+
+function stopReachebleCounter(){
+  clearTimeout(reachebleCountId);
 }
 
 function requestCall(receiverTelephoneLineId) {
@@ -263,11 +287,7 @@ function requestCall(receiverTelephoneLineId) {
     startCountUp();
     showCallModal();
 
-    const customWaitTimeSeconds = $(waitTimeSecondsId).val();
-    const waitTime = Number(customWaitTimeSeconds) > 0 ? customWaitTimeSeconds : 30;
-  
-    // verify state after 30 seconds
-    //setTimeout(verifyUnreachebleState, waitTime * 1000);
+    startReachebleCounter();
   }else{
     toastr.error('Su línea no está disponible en este momento.');
   }
